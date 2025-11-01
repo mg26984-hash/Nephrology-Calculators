@@ -1,1 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nephrology Calculator Suite - Updated</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f7f9fb;
+    color: #203040;
+    margin: 0; padding: 0;
+    font-size: 18px;
+  }
+  .container {
+    max-width: 900px;
+    margin: auto;
+    padding: 1rem 1.5rem;
+  }
+  h1 {
+    font-size: 2.4rem;
+    color: #265a6c;
+    text-align: center;
+    margin-bottom: 0.1rem;
+  }
+  .subtitle {
+    text-align: center;
+    color: #528ea6;
+    margin-bottom: 1.5rem;
+  }
+  nav.filter-nav {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  nav.filter-nav button {
+    background: #4fa8c8;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    margin: 0 0.3rem 0.8rem 0.3rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+  }
+  nav.filter-nav button.active, nav.filter-nav button:hover {
+    background: #265a6c;
+  }
+  main.calculators-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  section.calculator-category {
+    background: white;
+    padding: 1rem 1.2rem 1.5rem 1.2rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgb(50 50 50 / 0.1);
+  }
+  section.calculator-category h2 {
+    color: #1a4a5a;
+    border-bottom: 2px solid #4fa8c8;
+    padding-bottom: 0.3rem;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+  }
+  .calculator-card {
+    border: 1px solid #c8d9e2;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+  }
+  .card__header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #207299;
+  }
+  .form-group {
+    margin: 0.5rem 0 1rem 0;
+  }
+  .form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  input[type="number"], select {
+    width: 100%;
+    padding: 0.4rem 0.5rem;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    border: 1px solid #9fb8c7;
+    box-sizing: border-box;
+  }
+  .input-inline {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .input-inline > * {
+    flex: 1;
+  }
+  .result-box {
+    background: #d6eefc;
+    border: 1px solid #81bae3;
+    border-radius: 4px;
+    padding: 0.8rem 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #0c3c60;
+    margin-top: 0.5rem;
+  }
+  button.clear-btn {
+    background: #ef6666;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.7rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button.clear-btn:hover {
+    background: #b53333;
+  }
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 0.5rem;
+  }
+  label.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  footer {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #647d8e;
+    text-align: center;
+  }
+  .info-text {
+    font-size: 0.95rem;
+    color: #4a6878;
+    font-style: italic;
+    margin-top: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+  .frailty-criteria {
+    background: #f0f8ff;
+    padding: 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <h1>Nephrology Calculator Suite</h1>
+    <p class="subtitle">Professional medical calculators for nephrology practice</p>
+  </header>
 
+  <nav class="filter-nav">
+    <button class="filter-btn active" data-category="all">All Calculators</button>
+    <button class="filter-btn" data-category="clearance">Clearance</button>
+    <button class="filter-btn" data-category="dialysis">Dialysis</button>
+    <button class="filter-btn" data-category="anthropometric">Anthropometric</button>
+    <button class="filter-btn" data-category="sledai">SLEDAI-2K</button>
+    <button class="filter-btn" data-category="frailty">Frailty</button>
+  </nav>
+
+  <main class="calculators-grid">
+
+    <!-- Clearance Calculators -->
+    <section class="calculator-category" data-category="clearance">
+      <h2>Clearance Calculators</h2>
+
+      <!-- Cockcroft-Gault -->
+      <div class="calculator-card" id="cockcroft-gault">
+        <div class="card__header">
+          <h3>Cockcroft-Gault Equation</h3>
+          <button class="clear-btn" data-clear="cockcroft-gault">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age (years)</label>
+          <input type="number" id="cg-age" min="1" max="120" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight</label>
+          <div class="input-inline">
+            <input type="number" id="cg-weight" min="1" />
+            <select id="cg-weight-unit">
+              <option value="kg" selected>kg</option>
+              <option value="lbs">lbs</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Serum Creatinine</label>
+          <div class="input-inline">
+            <input type="number" id="cg-creatinine" min="0.1" step="0.01" />
+            <select id="cg-creatinine-unit">
+              <option value="mg/dl" selected>mg/dL</option>
+              <option value="umol/l">µmol/L</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="cg-gender">
+            <option value="male" selected>Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="result-box" id="cg-result">Creatinine Clearance: -</div>
+      </div>
+
+      <!-- CKD-EPI -->
+      <div class="calculator-card" id="ckd-epi">
+        <div class="card__header">
+          <h3>CKD-EPI 2021 Equation (Race Free)</h3>
+          <button class="clear-btn" data-clear="ckd-epi">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age (years)</label>
+          <input type="number" id="ckd-age" min="1" max="120" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Serum Creatinine</label>
+          <div class="input-inline">
+            <input type="number" id="ckd-creatinine" min="0.1" step="0.01" />
+            <select id="ckd-creatinine-unit">
+              <option value="mg/dl" selected>mg/dL</option>
+              <option value="umol/l">µmol/L</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="ckd-gender">
+            <option value="female" selected>Female</option>
+            <option value="male">Male</option>
+          </select>
+        </div>
+        <div class="result-box" id="ckd-result">eGFR: -</div>
+      </div>
+
+      <!-- Schwartz -->
+      <div class="calculator-card" id="schwartz">
+        <div class="card__header">
+          <h3>Schwartz Formula (Pediatric)</h3>
+          <button class="clear-btn" data-clear="schwartz">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (cm)</label>
+          <input type="number" id="sw-height" min="30" max="250" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Serum Creatinine (mg/dL)</label>
+          <input type="number" id="sw-creatinine" min="0.01" step="0.01" />
+        </div>
+        <div class="result-box" id="sw-result">eGFR: -</div>
+      </div>
+
+      <!-- eGFR for Obese -->
+      <div class="calculator-card" id="egfr-obese">
+        <div class="card__header">
+          <h3>eGFR for Obese Patients</h3>
+          <button class="clear-btn" data-clear="egfr-obese">Clear</button>
+        </div>
+        <p class="info-text">Uses Cockcroft-Gault with adjusted body weight: ABW = IBW + 0.4 × (Actual Weight - IBW)</p>
+        <div class="form-group">
+          <label class="form-label">Age (years)</label>
+          <input type="number" id="obese-age" min="1" max="120" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Actual Weight (kg)</label>
+          <input type="number" id="obese-weight" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (inches)</label>
+          <input type="number" id="obese-height" min="20" max="100" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Serum Creatinine</label>
+          <div class="input-inline">
+            <input type="number" id="obese-creatinine" min="0.1" step="0.01" />
+            <select id="obese-creatinine-unit">
+              <option value="mg/dl" selected>mg/dL</option>
+              <option value="umol/l">µmol/L</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="obese-gender">
+            <option value="male" selected>Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="result-box" id="obese-result">Adjusted CrCl: -</div>
+      </div>
+    </section>
+
+    <!-- Dialysis Calculators -->
+    <section class="calculator-category" data-category="dialysis">
+      <h2>Dialysis Calculators</h2>
+
+      <!-- Kt/V -->
+      <div class="calculator-card" id="ktv">
+        <div class="card__header">
+          <h3>Kt/V (Daugirdas Formula)</h3>
+          <button class="clear-btn" data-clear="ktv">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Predialysis BUN (mg/dL)</label>
+          <input type="number" id="ktv-pre" min="1" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Postdialysis BUN (mg/dL)</label>
+          <input type="number" id="ktv-post" min="1" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dialysis time (hours)</label>
+          <input type="number" id="ktv-time" min="1" max="20" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ultrafiltration volume (L)</label>
+          <input type="number" id="ktv-uf" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Postdialysis weight (kg)</label>
+          <input type="number" id="ktv-weight" min="1" step="0.1" />
+        </div>
+        <div class="result-box" id="ktv-result">Kt/V: -</div>
+      </div>
+
+      <!-- Total Body Water -->
+      <div class="calculator-card" id="tbw-dialysis">
+        <div class="card__header">
+          <h3>Total Body Water (Watson Formula)</h3>
+          <button class="clear-btn" data-clear="tbw-dialysis">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age (years)</label>
+          <input type="number" id="tbw-age" min="1" max="120" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" id="tbw-weight" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (cm)</label>
+          <input type="number" id="tbw-height" min="30" max="250" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="tbw-gender">
+            <option value="male" selected>Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="result-box" id="tbw-result">Total Body Water: -</div>
+      </div>
+
+      <!-- Hemodialysis Duration -->
+      <div class="calculator-card" id="hd-duration">
+        <div class="card__header">
+          <h3>Hemodialysis Duration</h3>
+          <button class="clear-btn" data-clear="hd-duration">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total fluid to remove (L)</label>
+          <input type="number" id="hd-fluid" min="0" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ultrafiltration rate (mL/kg/hr)</label>
+          <input type="number" id="hd-ufrate" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Patient weight (kg)</label>
+          <input type="number" id="hd-weight" min="1" step="0.1" />
+        </div>
+        <div class="result-box" id="hd-result">Duration (hours): -</div>
+      </div>
+
+      <!-- Iron Deficiency -->
+      <div class="calculator-card" id="iron-deficit">
+        <div class="card__header">
+          <h3>Iron Deficiency - Total Iron Deficit</h3>
+          <button class="clear-btn" data-clear="iron-deficit">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Body weight (kg)</label>
+          <input type="number" id="iron-weight" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Actual hemoglobin (g/dL)</label>
+          <input type="number" id="iron-hb" min="1" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target hemoglobin (g/dL)</label>
+          <input type="number" id="iron-target-hb" min="1" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Iron stores (mg)</label>
+          <input type="number" id="iron-stores" min="0" value="500" />
+        </div>
+        <div class="result-box" id="iron-result">Total Iron Deficit: -</div>
+      </div>
+
+      <!-- Required Iron Dose (Ganzoni) -->
+      <div class="calculator-card" id="iron-dose-ganzoni">
+        <div class="card__header">
+          <h3>Required Iron Dose (Ganzoni Formula)</h3>
+          <button class="clear-btn" data-clear="iron-dose-ganzoni">Clear</button>
+        </div>
+        <p class="info-text">Iron dose (mg) = Weight (kg) × (Target Hb - Actual Hb) (g/L) × 0.24 + Iron stores (mg)</p>
+        <div class="form-group">
+          <label class="form-label">Body weight (kg)</label>
+          <input type="number" id="ganzoni-weight" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Actual hemoglobin</label>
+          <div class="input-inline">
+            <input type="number" id="ganzoni-hb" min="1" step="0.1" />
+            <select id="ganzoni-hb-unit">
+              <option value="g/dl" selected>g/dL</option>
+              <option value="g/l">g/L</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target hemoglobin</label>
+          <div class="input-inline">
+            <input type="number" id="ganzoni-target-hb" min="1" step="0.1" />
+            <select id="ganzoni-target-hb-unit">
+              <option value="g/dl" selected>g/dL</option>
+              <option value="g/l">g/L</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Iron stores (mg)</label>
+          <input type="number" id="ganzoni-stores" min="0" value="500" />
+        </div>
+        <div class="result-box" id="ganzoni-result">Required Iron Dose: -</div>
+      </div>
+    </section>
+
+    <!-- Anthropometric Calculators -->
+    <section class="calculator-category" data-category="anthropometric">
+      <h2>Anthropometric Calculators</h2>
+
+      <!-- BMI -->
+      <div class="calculator-card" id="bmi">
+        <div class="card__header">
+          <h3>Body Mass Index (BMI)</h3>
+          <button class="clear-btn" data-clear="bmi">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" id="bmi-weight" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (cm)</label>
+          <input type="number" id="bmi-height" min="30" max="250" />
+        </div>
+        <div class="result-box" id="bmi-result">BMI: -</div>
+      </div>
+
+      <!-- Ideal Body Weight -->
+      <div class="calculator-card" id="ibw">
+        <div class="card__header">
+          <h3>Ideal Body Weight (Devine Formula)</h3>
+          <button class="clear-btn" data-clear="ibw">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (inches)</label>
+          <input type="number" id="ibw-height" min="20" max="100" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="ibw-gender">
+            <option value="male" selected>Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="result-box" id="ibw-result">Ideal Body Weight: -</div>
+      </div>
+
+      <!-- Total Body Water -->
+      <div class="calculator-card" id="tbw-anthro">
+        <div class="card__header">
+          <h3>Total Body Water (Watson Formula)</h3>
+          <button class="clear-btn" data-clear="tbw-anthro">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age (years)</label>
+          <input type="number" id="tbwa-age" min="1" max="120" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" id="tbwa-weight" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (cm)</label>
+          <input type="number" id="tbwa-height" min="30" max="250" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="tbwa-gender">
+            <option value="male" selected>Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="result-box" id="tbwa-result">Total Body Water: -</div>
+      </div>
+
+      <!-- Body Surface Area -->
+      <div class="calculator-card" id="bsa">
+        <div class="card__header">
+          <h3>Body Surface Area (DuBois Formula)</h3>
+          <button class="clear-btn" data-clear="bsa">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (cm)</label>
+          <input type="number" id="bsa-height" min="30" max="250" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" id="bsa-weight" min="1" />
+        </div>
+        <div class="result-box" id="bsa-result">Body Surface Area: -</div>
+      </div>
+
+      <!-- Plasma Volume -->
+      <div class="calculator-card" id="plasma-volume">
+        <div class="card__header">
+          <h3>Plasma Volume Calculator</h3>
+          <button class="clear-btn" data-clear="plasma-volume">Clear</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select id="pv-gender">
+            <option value="male" selected>Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" id="pv-weight" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hematocrit (%)</label>
+          <input type="number" id="pv-hematocrit" min="0" max="100" step="0.1" />
+        </div>
+        <div class="result-box" id="pv-result">Plasma Volume: -</div>
+      </div>
+    </section>
+
+    <!-- SLEDAI-2K Score -->
+    <section class="calculator-category" data-category="sledai">
+      <h2>SLEDAI-2K Score for Lupus Nephritis</h2>
+      <div class="calculator-card" id="sledai">
+        <div class="card__header">
+          <h3>SLEDAI-2K Clinical Items</h3>
+          <button class="clear-btn" data-clear="sledai">Clear</button>
+        </div>
+        <div class="checkbox-group sledai-items">
+          <label class="checkbox-label"><input type="checkbox" value="8" /> Seizure (8)</label>
+          <label class="checkbox-label"><input type="checkbox" value="8" /> Psychosis (8)</label>
+          <label class="checkbox-label"><input type="checkbox" value="8" /> Organic brain syndrome (8)</label>
+          <label class="checkbox-label"><input type="checkbox" value="8" /> Visual disturbance (8)</label>
+          <label class="checkbox-label"><input type="checkbox" value="8" /> Cranial nerve disorder (8)</label>
+          <label class="checkbox-label"><input type="checkbox" value="8" /> Lupus headache (8)</label>
+          <label class="checkbox-label"><input type="checkbox" value="8" /> CVA (8)</label>
+          <label class="checkbox-label"><input type="checkbox" value="8" /> Vasculitis (8)</label>
+          <label class="checkbox-label"><input type="checkbox" value="4" /> Arthritis (4)</label>
+          <label class="checkbox-label"><input type="checkbox" value="4" /> Myositis (4)</label>
+          <label class="checkbox-label"><input type="checkbox" value="4" /> Urinary casts (4)</label>
+          <label class="checkbox-label"><input type="checkbox" value="4" /> Hematuria (4)</label>
+          <label class="checkbox-label"><input type="checkbox" value="4" /> Proteinuria (4)</label>
+          <label class="checkbox-label"><input type="checkbox" value="4" /> Pyuria (4)</label>
+          <label class="checkbox-label"><input type="checkbox" value="2" /> Rash (2)</label>
+          <label class="checkbox-label"><input type="checkbox" value="2" /> Alopecia (2)</label>
+          <label class="checkbox-label"><input type="checkbox" value="2" /> Mucosal ulcers (2)</label>
+          <label class="checkbox-label"><input type="checkbox" value="2" /> Pleuritis (2)</label>
+          <label class="checkbox-label"><input type="checkbox" value="2" /> Pericarditis (2)</label>
+          <label class="checkbox-label"><input type="checkbox" value="2" /> Low complement (2)</label>
+          <label class="checkbox-label"><input type="checkbox" value="2" /> Increased DNA binding (2)</label>
+          <label class="checkbox-label"><input type="checkbox" value="1" /> Fever (1)</label>
+          <label class="checkbox-label"><input type="checkbox" value="1" /> Thrombocytopenia (1)</label>
+          <label class="checkbox-label"><input type="checkbox" value="1" /> Leukopenia (1)</label>
+        </div>
+        <div class="result-box" id="sledai-result">SLEDAI-2K Score: 0</div>
+      </div>
+    </section>
+
+    <!-- Frailty Phenotype -->
+    <section class="calculator-category" data-category="frailty">
+      <h2>Frailty Assessment</h2>
+      <div class="calculator-card" id="frailty">
+        <div class="card__header">
+          <h3>Frailty Phenotype (Fried Criteria)</h3>
+          <button class="clear-btn" data-clear="frailty">Clear</button>
+        </div>
+        <div class="frailty-criteria">
+          <p style="margin: 0 0 0.5rem 0; font-weight: 600;">Select applicable criteria (1 point each):</p>
+          <p style="margin: 0; font-size: 0.9rem;">≥3 = Frail | 1-2 = Pre-frail | 0 = Robust</p>
+        </div>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" class="frailty-item" value="1" /> <strong>Weight loss:</strong> Unintentional weight loss >10 lbs or >5% body weight in past year</label>
+          <label class="checkbox-label"><input type="checkbox" class="frailty-item" value="1" /> <strong>Exhaustion:</strong> Self-reported exhaustion identified by 2 questions from CES-D scale</label>
+          <label class="checkbox-label"><input type="checkbox" class="frailty-item" value="1" /> <strong>Weakness:</strong> Grip strength in lowest 20% (adjusted for gender and BMI)</label>
+          <label class="checkbox-label"><input type="checkbox" class="frailty-item" value="1" /> <strong>Slow walking speed:</strong> Walking speed in lowest 20% (adjusted for gender and height)</label>
+          <label class="checkbox-label"><input type="checkbox" class="frailty-item" value="1" /> <strong>Low physical activity:</strong> Physical activity in lowest 20% (kcal/week by PASE)</label>
+        </div>
+        <div class="result-box" id="frailty-result">Frailty Score: 0 (Robust)</div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Medical calculators are for educational use only and not a substitute for clinical judgment.</p>
+  </footer>
+</div>
+
+<script>
+  // Constants
+  const mgdlToUmolL = 88.4;
+  const lbsToKg = 0.453592;
+
+  // Utility functions
+  function convertWeightToKg(weight, unit) {
+    return unit === 'lbs' ? weight * lbsToKg : weight;
+  }
+  function convertCreatinineToMgdl(creat, unit) {
+    return unit === 'umol/l' ? creat / mgdlToUmolL : creat;
+  }
+  function convertHbToGperL(hb, unit) {
+    return unit === 'g/dl' ? hb * 10 : hb;
+  }
+
+  // Cockcroft-Gault
+  function calcCockcroftGault() {
+    const age = +document.getElementById('cg-age').value;
+    const weightRaw = +document.getElementById('cg-weight').value;
+    const weightUnit = document.getElementById('cg-weight-unit').value;
+    const serumCreatRaw = +document.getElementById('cg-creatinine').value;
+    const creatUnit = document.getElementById('cg-creatinine-unit').value;
+    const gender = document.getElementById('cg-gender').value;
+
+    if (!age || !weightRaw || !serumCreatRaw) {
+      document.getElementById('cg-result').textContent = "Creatinine Clearance: -";
+      return;
+    }
+    const weight = convertWeightToKg(weightRaw, weightUnit);
+    const serumCreat = convertCreatinineToMgdl(serumCreatRaw, creatUnit);
+
+    const genderFactor = gender === 'female' ? 0.85 : 1.0;
+    const crcl = ((140 - age) * weight * genderFactor) / (72 * serumCreat);
+    document.getElementById('cg-result').textContent = `Creatinine Clearance: ${crcl.toFixed(2)} mL/min`;
+  }
+
+  // CKD-EPI 2021
+  function calcCkdEpi() {
+    const age = +document.getElementById('ckd-age').value;
+    const serumCreatRaw = +document.getElementById('ckd-creatinine').value;
+    const creatUnit = document.getElementById('ckd-creatinine-unit').value;
+    const gender = document.getElementById('ckd-gender').value;
+
+    if (!age || !serumCreatRaw) {
+      document.getElementById('ckd-result').textContent = "eGFR: -";
+      return;
+    }
+    const serumCreat = convertCreatinineToMgdl(serumCreatRaw, creatUnit);
+
+    let k = gender === 'female' ? 0.7 : 0.9;
+    let alpha = gender === 'female' ? -0.241 : -0.302;
+    let minScrk = Math.min(serumCreat / k, 1);
+    let maxScrk = Math.max(serumCreat / k, 1);
+
+    let eGFR = 142 * (minScrk ** alpha) * (maxScrk ** (-1.200)) * (0.9938 ** age);
+    if (gender === 'female') eGFR *= 1.012;
+    document.getElementById('ckd-result').textContent = `eGFR: ${eGFR.toFixed(2)} mL/min/1.73m²`;
+  }
+
+  // Schwartz
+  function calcSchwartz() {
+    const height = +document.getElementById('sw-height').value;
+    const serumCreat = +document.getElementById('sw-creatinine').value;
+
+    if (!height || !serumCreat) {
+      document.getElementById('sw-result').textContent = "eGFR: -";
+      return;
+    }
+    const eGFR = 0.413 * (height / serumCreat);
+    document.getElementById('sw-result').textContent = `eGFR: ${eGFR.toFixed(2)} mL/min/1.73m²`;
+  }
+
+  // eGFR for Obese
+  function calcEgfrObese() {
+    const age = +document.getElementById('obese-age').value;
+    const actualWeight = +document.getElementById('obese-weight').value;
+    const heightInches = +document.getElementById('obese-height').value;
+    const serumCreatRaw = +document.getElementById('obese-creatinine').value;
+    const creatUnit = document.getElementById('obese-creatinine-unit').value;
+    const gender = document.getElementById('obese-gender').value;
+
+    if (!age || !actualWeight || !heightInches || !serumCreatRaw) {
+      document.getElementById('obese-result').textContent = "Adjusted CrCl: -";
+      return;
+    }
+
+    const serumCreat = convertCreatinineToMgdl(serumCreatRaw, creatUnit);
+
+    // Calculate IBW using Devine formula
+    let ibw;
+    if (gender === 'male') {
+      ibw = 50 + 2.3 * (heightInches - 60);
+    } else {
+      ibw = 45.5 + 2.3 * (heightInches - 60);
+    }
+
+    // Calculate adjusted body weight
+    const abw = ibw + 0.4 * (actualWeight - ibw);
+
+    // Use ABW in Cockcroft-Gault
+    const genderFactor = gender === 'female' ? 0.85 : 1.0;
+    const crcl = ((140 - age) * abw * genderFactor) / (72 * serumCreat);
+
+    document.getElementById('obese-result').textContent = `Adjusted CrCl: ${crcl.toFixed(2)} mL/min (ABW: ${abw.toFixed(1)} kg)`;
+  }
+
+  // Kt/V
+  function calcKtv() {
+    const predialysisBUN = +document.getElementById('ktv-pre').value;
+    const postdialysisBUN = +document.getElementById('ktv-post').value;
+    const dialysisTime = +document.getElementById('ktv-time').value;
+    const ufVolume = +document.getElementById('ktv-uf').value;
+    const postWeight = +document.getElementById('ktv-weight').value;
+
+    if (!predialysisBUN || !postdialysisBUN || !dialysisTime || !postWeight) {
+      document.getElementById('ktv-result').textContent = "Kt/V: -";
+      return;
+    }
+    const R = postdialysisBUN / predialysisBUN;
+    const t = dialysisTime;
+    const UF = ufVolume || 0;
+    const W = postWeight;
+
+    const ktv = (-Math.log(R - 0.008 * t)) + (4 - 3.5 * R) * (UF / W);
+    document.getElementById('ktv-result').textContent = `Kt/V: ${ktv.toFixed(3)}`;
+  }
+
+  // Total Body Water (Watson)
+  function calcTbwDialysis() {
+    const age = +document.getElementById('tbw-age').value;
+    const weight = +document.getElementById('tbw-weight').value;
+    const height = +document.getElementById('tbw-height').value;
+    const gender = document.getElementById('tbw-gender').value;
+
+    if (!age || !weight || !height) {
+      document.getElementById('tbw-result').textContent = "Total Body Water: -";
+      return;
+    }
+    let tbw;
+    if (gender === 'male') {
+      tbw = 2.447 + 0.3362 * weight + 0.1074 * height - 0.09516 * age;
+    } else {
+      tbw = -2.097 + 0.2466 * weight + 0.1069 * height;
+    }
+    document.getElementById('tbw-result').textContent = `Total Body Water: ${tbw.toFixed(2)} L`;
+  }
+
+  // Hemodialysis duration
+  function calcHdDuration() {
+    const totalFluid = +document.getElementById('hd-fluid').value;
+    const ufRate = +document.getElementById('hd-ufrate').value;
+    const weight = +document.getElementById('hd-weight').value;
+
+    if (!totalFluid || !ufRate || !weight) {
+      document.getElementById('hd-result').textContent = "Duration (hours): -";
+      return;
+    }
+    const duration = totalFluid / (ufRate * weight / 1000);
+    document.getElementById('hd-result').textContent = `Duration (hours): ${duration.toFixed(2)}`;
+  }
+
+  // Iron Deficiency
+  function calcIronDeficit() {
+    const weight = +document.getElementById('iron-weight').value;
+    const hbActual = +document.getElementById('iron-hb').value;
+    const hbTarget = +document.getElementById('iron-target-hb').value;
+    const ironStores = +document.getElementById('iron-stores').value || 0;
+
+    if (!weight || !hbActual || !hbTarget) {
+      document.getElementById('iron-result').textContent = "Total Iron Deficit: -";
+      return;
+    }
+    const deficit = weight * (hbTarget - hbActual) * 2.4 + ironStores;
+    document.getElementById('iron-result').textContent = `Total Iron Deficit: ${deficit.toFixed(1)} mg`;
+  }
+
+  // Required Iron Dose (Ganzoni)
+  function calcGanzoni() {
+    const weight = +document.getElementById('ganzoni-weight').value;
+    const hbActual = +document.getElementById('ganzoni-hb').value;
+    const hbActualUnit = document.getElementById('ganzoni-hb-unit').value;
+    const hbTarget = +document.getElementById('ganzoni-target-hb').value;
+    const hbTargetUnit = document.getElementById('ganzoni-target-hb-unit').value;
+    const ironStores = +document.getElementById('ganzoni-stores').value || 0;
+
+    if (!weight || !hbActual || !hbTarget) {
+      document.getElementById('ganzoni-result').textContent = "Required Iron Dose: -";
+      return;
+    }
+
+    // Convert to g/L
+    const hbActualGL = convertHbToGperL(hbActual, hbActualUnit);
+    const hbTargetGL = convertHbToGperL(hbTarget, hbTargetUnit);
+
+    // Ganzoni formula: Iron dose (mg) = Weight (kg) × (Target Hb - Actual Hb) (g/L) × 0.24 + Iron stores
+    const ironDose = weight * (hbTargetGL - hbActualGL) * 0.24 + ironStores;
+
+    document.getElementById('ganzoni-result').textContent = `Required Iron Dose: ${ironDose.toFixed(0)} mg`;
+  }
+
+  // BMI
+  function calcBmi() {
+    const weight = +document.getElementById('bmi-weight').value;
+    const heightCm = +document.getElementById('bmi-height').value;
+
+    if (!weight || !heightCm) {
+      document.getElementById('bmi-result').textContent = "BMI: -";
+      return;
+    }
+    const heightM = heightCm / 100;
+    const bmi = weight / (heightM * heightM);
+    let category = "";
+    if (bmi < 18.5) category = " (Underweight)";
+    else if (bmi < 25) category = " (Normal)";
+    else if (bmi < 30) category = " (Overweight)";
+    else category = " (Obese)";
+    document.getElementById('bmi-result').textContent = `BMI: ${bmi.toFixed(1)}${category}`;
+  }
+
+  // Ideal Body Weight
+  function calcIbw() {
+    const heightIn = +document.getElementById('ibw-height').value;
+    const gender = document.getElementById('ibw-gender').value;
+    if (!heightIn || heightIn < 20) {
+      document.getElementById('ibw-result').textContent = "Ideal Body Weight: -";
+      return;
+    }
+    let ibw;
+    if (gender === 'male') {
+      ibw = 50 + 2.3 * (heightIn - 60);
+    } else {
+      ibw = 45.5 + 2.3 * (heightIn - 60);
+    }
+    document.getElementById('ibw-result').textContent = `Ideal Body Weight: ${ibw.toFixed(1)} kg`;
+  }
+
+  // Total Body Water (Watson) anthropometric
+  function calcTbwAnthro() {
+    const age = +document.getElementById('tbwa-age').value;
+    const weight = +document.getElementById('tbwa-weight').value;
+    const height = +document.getElementById('tbwa-height').value;
+    const gender = document.getElementById('tbwa-gender').value;
+
+    if (!age || !weight || !height) {
+      document.getElementById('tbwa-result').textContent = "Total Body Water: -";
+      return;
+    }
+    let tbw;
+    if (gender === 'male') {
+      tbw = 2.447 + 0.3362 * weight + 0.1074 * height - 0.09516 * age;
+    } else {
+      tbw = -2.097 + 0.2466 * weight + 0.1069 * height;
+    }
+    document.getElementById('tbwa-result').textContent = `Total Body Water: ${tbw.toFixed(2)} L`;
+  }
+
+  // Body Surface Area
+  function calcBsa() {
+    const height = +document.getElementById('bsa-height').value;
+    const weight = +document.getElementById('bsa-weight').value;
+
+    if (!height || !weight) {
+      document.getElementById('bsa-result').textContent = "Body Surface Area: -";
+      return;
+    }
+    const bsa = 0.007184 * Math.pow(height,0.725) * Math.pow(weight,0.425);
+    document.getElementById('bsa-result').textContent = `Body Surface Area: ${bsa.toFixed(2)} m²`;
+  }
+
+  // Plasma Volume
+  function calcPlasmaVolume() {
+    const gender = document.getElementById('pv-gender').value;
+    const weight = +document.getElementById('pv-weight').value;
+    const hct = +document.getElementById('pv-hematocrit').value;
+
+    if (!weight || !hct) {
+      document.getElementById('pv-result').textContent = "Plasma Volume: -";
+      return;
+    }
+    const tbv_mL = gender === 'male' ? 70 * weight : 65 * weight;
+    const pv_mL = tbv_mL * (1 - hct / 100);
+    const pv_L = pv_mL / 1000;
+    document.getElementById('pv-result').textContent = `Plasma Volume: ${pv_L.toFixed(2)} L`;
+  }
+
+  // SLEDAI-2K Score
+  function calcSledaiScore() {
+    const checkboxes = document.querySelectorAll('#sledai input[type="checkbox"]');
+    let score = 0;
+    checkboxes.forEach(cb => {
+      if(cb.checked) score += Number(cb.value);
+    });
+    document.getElementById('sledai-result').textContent = `SLEDAI-2K Score: ${score}`;
+  }
+
+  // Frailty Phenotype
+  function calcFrailty() {
+    const checkboxes = document.querySelectorAll('.frailty-item');
+    let score = 0;
+    checkboxes.forEach(cb => {
+      if(cb.checked) score += 1;
+    });
+    let category = "";
+    if (score === 0) category = " (Robust)";
+    else if (score <= 2) category = " (Pre-frail)";
+    else category = " (Frail)";
+    document.getElementById('frailty-result').textContent = `Frailty Score: ${score}${category}`;
+  }
+
+  // Clear buttons
+  function clearCalculator(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    Array.from(section.querySelectorAll('input')).forEach(input => {
+      if(input.type === "checkbox") {
+        input.checked = false;
+      } else {
+        input.value = '';
+      }
+    });
+    // Reset result boxes
+    if(sectionId === 'sledai') {
+      calcSledaiScore();
+    } else if(sectionId === 'frailty') {
+      calcFrailty();
+    } else {
+      const resultBoxes = section.querySelectorAll('.result-box');
+      resultBoxes.forEach(box => {
+        const label = box.textContent.split(':')[0];
+        box.textContent = label + ': -';
+      });
+    }
+  }
+
+  // Event bindings
+  function bindEvents() {
+    // Filter buttons
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const category = button.dataset.category;
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const sections = document.querySelectorAll('.calculator-category');
+        sections.forEach(section => {
+          if(category === 'all' || section.dataset.category === category) {
+            section.style.display = 'block';
+          } else {
+            section.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Clear buttons
+    document.querySelectorAll('.clear-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const target = e.target.getAttribute('data-clear');
+        clearCalculator(target);
+      });
+    });
+
+    // Input events - Clearance
+    ['cg-age', 'cg-weight', 'cg-creatinine'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcCockcroftGault));
+    ['cg-weight-unit', 'cg-creatinine-unit', 'cg-gender'].forEach(id => 
+      document.getElementById(id).addEventListener('change', calcCockcroftGault));
+
+    ['ckd-age', 'ckd-creatinine'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcCkdEpi));
+    ['ckd-creatinine-unit', 'ckd-gender'].forEach(id => 
+      document.getElementById(id).addEventListener('change', calcCkdEpi));
+
+    ['sw-height', 'sw-creatinine'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcSchwartz));
+
+    ['obese-age', 'obese-weight', 'obese-height', 'obese-creatinine'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcEgfrObese));
+    ['obese-creatinine-unit', 'obese-gender'].forEach(id => 
+      document.getElementById(id).addEventListener('change', calcEgfrObese));
+
+    // Input events - Dialysis
+    ['ktv-pre', 'ktv-post', 'ktv-time', 'ktv-uf', 'ktv-weight'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcKtv));
+
+    ['tbw-age', 'tbw-weight', 'tbw-height'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcTbwDialysis));
+    document.getElementById('tbw-gender').addEventListener('change', calcTbwDialysis);
+
+    ['hd-fluid', 'hd-ufrate', 'hd-weight'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcHdDuration));
+
+    ['iron-weight', 'iron-hb', 'iron-target-hb', 'iron-stores'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcIronDeficit));
+
+    ['ganzoni-weight', 'ganzoni-hb', 'ganzoni-target-hb', 'ganzoni-stores'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcGanzoni));
+    ['ganzoni-hb-unit', 'ganzoni-target-hb-unit'].forEach(id => 
+      document.getElementById(id).addEventListener('change', calcGanzoni));
+
+    // Input events - Anthropometric
+    ['bmi-weight', 'bmi-height'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcBmi));
+
+    ['ibw-height'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcIbw));
+    document.getElementById('ibw-gender').addEventListener('change', calcIbw);
+
+    ['tbwa-age', 'tbwa-weight', 'tbwa-height'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcTbwAnthro));
+    document.getElementById('tbwa-gender').addEventListener('change', calcTbwAnthro);
+
+    ['bsa-height', 'bsa-weight'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcBsa));
+
+    ['pv-weight', 'pv-hematocrit'].forEach(id => 
+      document.getElementById(id).addEventListener('input', calcPlasmaVolume));
+    document.getElementById('pv-gender').addEventListener('change', calcPlasmaVolume);
+
+    // SLEDAI
+    document.querySelectorAll('#sledai input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', calcSledaiScore);
+    });
+
+    // Frailty
+    document.querySelectorAll('.frailty-item').forEach(cb => {
+      cb.addEventListener('change', calcFrailty);
+    });
+
+    // Initial calculations
+    calcSledaiScore();
+    calcFrailty();
+  }
+
+  window.onload = bindEvents;
+</script>
+
+</body>
+</html>
